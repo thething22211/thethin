@@ -36,7 +36,7 @@ strongblast.Size = UDim2.new(0, 122, 0, 50)
 strongblast.Modal = true
 strongblast.Selected = true
 strongblast.Font = Enum.Font.SourceSans
-strongblast.Text = "[Mitz Hub]"
+strongblast.Text = "[Blu-Iron]"
 strongblast.TextColor3 = Color3.fromRGB(255, 255, 255)
 strongblast.TextSize = 14.000
 strongblast.MouseButton1Down:connect (function()
