@@ -1,0 +1,131 @@
+-- Gui to Lua
+-- Version: 3.2
+ 
+-- Instances:
+ 
+local ScreenGui = Instance.new("ScreenGui")
+local main = Instance.new("Frame")
+local strongblast = Instance.new("TextButton")
+local cappscript = Instance.new("TextButton")
+local Beamscript = Instance.new("TextButton")
+local chromesute = Instance.new("TextButton")
+local loopkillscript = Instance.new("TextButton")
+local Label = Instance.new("TextLabel")
+ 
+--Properties:
+ 
+ScreenGui.Parent = game.CoreGui
+ 
+main.Name = "main"
+main.Parent = ScreenGui
+main.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
+main.Position = UDim2.new(0.31841433, 0, 0.409542739, 0)
+main.Size = UDim2.new(0, 368, 0, 186)
+main.Active = true
+main.Draggable = true
+ 
+ 
+ 
+ 
+strongblast.Name = "WORKING ON"
+strongblast.Parent = main
+strongblast.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+strongblast.BorderColor3 = Color3.fromRGB(32, 50, 63)
+strongblast.Position = UDim2.new(-0.00249393401, 0, 0.178396434, 0)
+strongblast.Size = UDim2.new(0, 122, 0, 50)
+strongblast.Modal = true
+strongblast.Selected = true
+strongblast.Font = Enum.Font.SourceSans
+strongblast.Text = "[Mitz Hub]"
+strongblast.TextColor3 = Color3.fromRGB(255, 255, 255)
+strongblast.TextSize = 14.000
+strongblast.MouseButton1Down:connect (function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/thething22211/thethin/main/README.md"))()
+end)
+ 
+ 
+cappscript.Name = "capp script"
+cappscript.Parent = main
+cappscript.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+cappscript.BorderColor3 = Color3.fromRGB(32, 50, 63)
+cappscript.Position = UDim2.new(-0.00248020026, 0, 0.726199508, 0)
+cappscript.Size = UDim2.new(0, 122, 0, 50)
+cappscript.Modal = true
+cappscript.Selected = true
+cappscript.Font = Enum.Font.SourceSans
+cappscript.Text = "Capp Script"
+cappscript.TextColor3 = Color3.fromRGB(255, 255, 255)
+cappscript.TextSize = 14.000
+cappscript.MouseButton1Down:connect (function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/boop71/cappuccino-new/main/loader.lua"))()
+end)
+ 
+ 
+ 
+ 
+ 
+Beamscript.Name = "Beam script"
+Beamscript.Parent = main
+Beamscript.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Beamscript.BorderColor3 = Color3.fromRGB(32, 50, 63)
+Beamscript.Position = UDim2.new(0.332972109, 0, 0.452247351, 0)
+Beamscript.Size = UDim2.new(0, 122, 0, 50)
+Beamscript.Modal = true
+Beamscript.Selected = true
+Beamscript.Font = Enum.Font.SourceSans
+Beamscript.Text = "BEAM Script"
+Beamscript.TextColor3 = Color3.fromRGB(255, 255, 255)
+Beamscript.TextSize = 14.000
+Beamscript.MouseButton1Down:connect (function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/iHA7Wx22"))()
+end)
+ 
+ 
+ 
+chromesute.Name = "Suit Moods"
+chromesute.Parent = main
+chromesute.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+chromesute.BorderColor3 = Color3.fromRGB(32, 50, 63)
+chromesute.Position = UDim2.new(0.664493859, 0, 0.178053796, 0)
+chromesute.Size = UDim2.new(0, 122, 0, 50)
+chromesute.Modal = true
+chromesute.Selected = true
+chromesute.Font = Enum.Font.SourceSans
+chromesute.Text = "Suit Mods"
+chromesute.TextColor3 = Color3.fromRGB(255, 255, 255)
+chromesute.TextSize = 14.000
+chromesute.MouseButton1Down:connect (function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/7w6wZQXy"))()
+end)
+ 
+ 
+ 
+ 
+ 
+loopkillscript.Name = "Vrison"
+loopkillscript.Parent = main
+loopkillscript.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+loopkillscript.BorderColor3 = Color3.fromRGB(32, 50, 63)
+loopkillscript.Position = UDim2.new(0.664493859, 0, 0.721064568, 0)
+loopkillscript.Size = UDim2.new(0, 122, 0, 50)
+loopkillscript.Modal = true
+loopkillscript.Selected = true
+loopkillscript.Font = Enum.Font.SourceSans
+loopkillscript.Text = "Virson"
+loopkillscript.TextColor3 = Color3.fromRGB(255, 255, 255)
+loopkillscript.TextSize = 14.000
+loopkillscript.MouseButton1Down:connect (function()
+    print("alfa 0.031")
+end)
+ 
+ 
+ 
+ 
+Label.Name = "Label"
+Label.Parent = main
+Label.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Label.Size = UDim2.new(0, 366, 0, 33)
+Label.Font = Enum.Font.SourceSans
+Label.Text = "IRON MAN SIM SCRIPT BY TERRY"
+Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+Label.TextSize = 14.000
