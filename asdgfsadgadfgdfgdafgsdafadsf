@@ -1,0 +1,1203 @@
+local servizioTastiera = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+
+--Variabili per la gestione del punto da colpire quando viene sparato un raggio o un proiettile
+local bodyParts = {
+	"UpperTorso",
+	"Head"
+}
+local bodyPartsPointer = 1
+
+--Variabili che gestiscono le modalità e gli stati
+local status = false --Stato dell'uccisione   
+local mode = 0 --Selezionatore di modalità
+
+--Variabili che gestiscono la selezione del giocatore dalla lista giocatori
+local targetName = nil
+local targetPointer = 1  
+
+local view = false  --Flag che segnala il movimento della telecamera al target
+local safe = false  --Flag che segnala l'attivazione della modalità safe
+
+--Gestione del raggio del giocatore
+local radius = 70   --Raggio di uccisione
+local radiusInc = 5 --Incremento del raggio
+
+--Gestione della rotazione del cerchio di raggi
+local rayCircleRotationStats = 0 --Stato di rotazione del cerchio di raggi
+local rayCircleSpeed = 0.5	--Velocità di rotazione del cerchio di raggi
+local lastTimeRotation = os.clock();	--Ultimo tempo per avere la rotazione in secondi
+
+--Gestione del cubo
+local safePlayersNames = {}
+
+--Gestione dell'anima
+local comandi = {
+	avanti = false,
+	indietro = false,
+	sinistra = false,
+	destra = false,
+	su = false,
+	giu = false
+}
+
+local posizioneManoSinistra = nil
+local posizioneManoDestra = nil
+
+local esternato = false
+
+local parteAnima = nil
+
+local velocitaAnima = 10
+--[[
+Chiama l'evento per lo sparo del raggio
+@param from(Vector3) Partenza di sparo del raggio
+@param to(Vector3) Arrivo dello sparo del raggio
+@param speed(Integer) Velocità del raggio
+@param[Optional] collisione(Part) Indica se il raggio collide con qualcosa oppure no
+@post condition Viene visualizzato un raggio da from a to che toglie danno in caso di collisione con un elemento
+--]]
+function callShotEvent(from, to, speed, collisione)
+    local event = game.Players.LocalPlayer.Backpack.suitControl.Assets.Events.fireRepulsor
+	local player = game.Players.LocalPlayer
+  
+    if player.Character ~= nil and player.Character:FindFirstChild("Suit") ~= nil then
+		local suit = player.Character:FindFirstChild("Suit")
+        local reattore = suit:FindFirstChild("RightHand").Thruster
+    
+        local step = (to - from).Magnitude / speed	--Valore della funzione
+        if collisione == nil then
+            event:InvokeServer(
+                "right",
+                from,
+                to,
+                step,
+                speed,
+                reattore.Exhaust
+            );
+        else
+            event:InvokeServer(
+                "right",
+                from,
+                to,
+                step,
+                speed,
+                reattore.Exhaust,
+                collisione
+            );
+        end
+    end
+end
+
+--[[
+Chiama l'evento di lag
+--]]
+function callLagEvent()
+	local event = game.Players.LocalPlayer.Backpack.suitControl.Assets.Events.fireRepulsor
+	local player = game.Players.LocalPlayer
+  
+    if player.Character ~= nil and player.Character:FindFirstChild("Suit") ~= nil then
+    
+        local suit = player.Character:FindFirstChild("Suit")
+        local reattore = suit:FindFirstChild("RightHand").Thruster
+    
+        event:InvokeServer(
+			"right",
+			Vector3.new(0, 1000, 0),
+			Vector3.new(0, 0, 0),
+			0,
+			2000,
+			reattore.Exhaust,
+			Instance.new("Part")
+        );
+    end
+end
+
+--[[
+Spara un raggio da un punto ad un altro
+@param from(Vector3) Punto di inizio del lancio
+@param to(Vector3) Punto di arrivo del lancio
+@param speed(Integer) Velocità del raggio
+@param[Optional] enemyName(String) giocatore da colpire
+--]]
+function shot(from, to, speed, enemyName)
+    local collisione = nil
+	if enemyName ~= nil then
+		local playerEnemy = game.Players:WaitForChild(enemyName)
+		if playerEnemy ~= nil and playerEnemy.Character ~= nil then
+			collisione = playerEnemy.Character:WaitForChild(bodyParts[bodyPartsPointer])
+		end
+	end
+	
+	--Chiama l'evento di sparo del proiettile
+	coroutine.resume(coroutine.create(function()
+		callShotEvent(from, to, speed, collisione)
+	end))
+end
+
+--[[
+Uccide un giocatore o almeno tenta
+@param enemyName(String) Nome del giocatore da uccidere
+]]--
+function kill(enemyName)
+    local enemyChar = game.Workspace:FindFirstChild(enemyName)
+    if enemyChar ~= nil and enemyChar:FindFirstChild(bodyParts[bodyPartsPointer])  ~= nil then
+        local position = enemyChar.UpperTorso.Position
+        
+        shot(
+            position + Vector3.new(0, 100, 0),
+            position - Vector3.new(0, 5, 0),
+            2000,
+            enemyName
+        );
+    end
+end
+
+--[[
+Spawna un raggio di cerchi attorno al target
+@param rayNumber(Integer) Numero di raggi del cerchio
+]]--
+function rayCircle(rayNumber)
+	if targetName ~= nil then
+		local targetPlayer = game.Players:FindFirstChild(targetName)
+		if targetPlayer ~= nil and targetPlayer.Character ~= nil then
+		local torsoPosition = targetPlayer.Character.UpperTorso.Position
+      
+			local index = 0
+			while index < rayNumber do
+				local radiant = math.rad( rayCircleRotationStats + ((360 / rayNumber) * index) )
+				local c = math.cos(radiant)
+				local s = math.sin(radiant)
+				
+				shot(
+					torsoPosition + Vector3.new(c * radius, 200, s * radius),
+					torsoPosition + Vector3.new(c * radius, -10, s * radius),
+					2000,
+					nil
+				)
+				
+				index = index + 1
+			end
+			
+			rayCircleRotationStats = rayCircleRotationStats + ((os.clock() - lastTimeRotation) * rayCircleSpeed)
+		end
+	end
+end
+
+--[[
+Spara un cubo di raggi
+--]]
+function rayCube()
+	if targetName ~= nil then
+		local targetPlayer = game.Players:FindFirstChild(targetName)
+		if targetPlayer ~= nil and targetPlayer.Character ~= nil then
+			local targetCharacter = targetPlayer.Character
+			local torsoPosition = targetCharacter.HumanoidRootPart.Position
+			
+			function shotQuadrato(p1, p2, p3, p4)
+				shot(
+					p1,
+					p2,
+					2000,
+					nil
+				)
+				
+				shot(
+					p2,
+					p3,
+					2000,
+					nil
+				)
+				
+				shot(
+					p3,
+					p4,
+					2000,
+					nil
+				)
+				
+				shot(
+					p4,
+					p1,
+					2000,
+					nil
+				)
+			end
+			
+			local size = radius
+			
+			local pt0 = torsoPosition + Vector3.new(-size, (size * 2) - 2, size)
+			local pt1 = torsoPosition + Vector3.new(size, (size * 2) - 2, size)
+			local pt2 = torsoPosition + Vector3.new(-size, (size * 2) - 2, -size)
+			local pt3 = torsoPosition + Vector3.new(size, (size * 2) - 2, -size)
+			
+			local pb0 = torsoPosition + Vector3.new(-size, -2, size)
+			local pb1 = torsoPosition + Vector3.new(size, -2, size)
+			local pb2 = torsoPosition + Vector3.new(-size, -2, -size)
+			local pb3 = torsoPosition + Vector3.new(size, -2, -size)
+			
+			shotQuadrato(pt0, pt1, pt3, pt2)
+			shotQuadrato(pb0, pb1, pb3, pb2)
+			
+			shotQuadrato(pt0, pt1, pb1, pb0)
+			shotQuadrato(pt1, pt2, pb2, pb1)
+			shotQuadrato(pt2, pt3, pb3, pb2)
+			shotQuadrato(pt3, pt4, pb4, pb3)
+		end
+	end
+end
+
+--[[
+Esegue un uccisione in modalità sospetta partendo dalle mani del target
+@parma enemyName(String) Nome del giocatore da colpire
+--]]
+function killSuspectMode(enemyName)
+	if targetName ~= nil then
+		local enemyPlayer = game.Players:FindFirstChild(enemyName)
+		local targetPlayer = game.Players:FindFirstChild(targetName)
+		if targetPlayer ~= nil and targetPlayer.Character ~= nil and 
+		   enemyPlayer~= nil and enemyPlayer.Character ~= nil then
+		   
+			local targetCharacter = targetPlayer.Character
+			local enemyCharacter = enemyPlayer.Character
+			
+			local collisionPart = enemyCharacter:FindFirstChild(bodyParts[bodyPartsPointer])
+			local leftHand = targetCharacter:FindFirstChild("LeftHand")
+			local rightHand = targetCharacter:FindFirstChild("RightHand")
+			
+			if collisionPart ~= nil and leftHand ~= nil and rightHand ~= nil then
+				shot(
+					leftHand.Position,
+					collisionPart.Position,
+					2000,
+					enemyName
+				)
+				
+				shot(
+					rightHand.Position,
+					collisionPart.Position,
+					2000,
+					enemyName
+				)
+			end
+		end
+	end
+end
+
+--[[
+Tira un pugno al giocatore passato
+@param enemyName(String) Nome del giocatore da uccidere
+@param force(Integer) Forza da applicare al pugno
+--]]
+function punch(enemyName, force)
+	local enemyPlayer = game.Players:FindFirstChild(enemyName)
+	if enemyPlayer ~= nil and enemyPlayer.Character ~= nil then
+		local enemyCharacter = enemyPlayer.Character
+		for i, v in pairs(enemyCharacter:GetChildren()) do
+			local evento = game.Players.LocalPlayer.Backpack.suitControl.Assets.Events.punchHit
+			evento:FireServer(
+				v, 
+				force
+			)
+		end
+	end
+end
+
+--[[
+Distrugge le mani dell'armatura del nemico
+@param enemyName(String) Nome del giocatore da uccidere
+]]--
+function destroyArmor(enemyName)
+	local enemyPlayer = game.Players:FindFirstChild(enemyName)
+	if enemyPlayer ~= nil and enemyPlayer.Character ~= nil then
+    local enemyCharacter = enemyPlayer.Character
+    
+		local leftHand = enemyCharacter:FindFirstChild("LeftHand")
+		local rightHand = enemyCharacter:FindFirstChild("RightHand")
+		
+		if leftHand ~= nil and rightHand ~= nil then
+			callShotEvent(
+				leftHand.Position - Vector3.new(0, 100, 0), 
+				leftHand.Position, 
+				2000, 
+				leftHand
+			)
+			
+			callShotEvent(
+				rightHand.Position - Vector3.new(0, 100, 0), 
+				rightHand.Position, 
+				2000, 
+				rightHand
+			)
+		end
+	end
+end
+
+--[[
+Funzione che trasporta il giocatore intorno alla mappa
+--]]
+function safeFunction()
+    local character = player.Character;
+    if character ~= nil then
+        local posX = -1500 + ( 3000 * math.random() )
+        local posY = 1500 * math.random()
+        local posZ = -1500 + ( 3000 * math.random() )
+        
+        character.HumanoidRootPart.CFrame = CFrame.new(posX, 2000 + posY, posZ)
+		wait(1)
+    end
+end
+
+--[[
+Prima funzione per la god mode
+@param name(String) nome del giocatore a cui dare la godMode
+--]]
+function giveGodFunction(name)
+	local player = game:GetService("Players"):FindFirstChild(name)
+	if player ~= nil and player.Character ~= nil then 
+		if player.Character:FindFirstChild("Suit") ~= nil then 
+			for i, v in pairs(player.Character.Suit:GetChildren())do 
+				if v:FindFirstChild("Union") then 
+					player.Backpack.suitControl.Assets.Events.punchHit:FireServer(v.Union, -9999999999999999999999)
+				end
+			end
+		end
+	end
+end
+
+--[[
+Attiva o disattiva lo stato di uccisione
+]]--
+function attivaKill()
+    if status then
+        status = false
+        print("Kill mode OFF")
+    else
+        status = true
+        print("Kill mode ON")
+    end
+end
+
+--[[
+Restituisce il nome della modalità
+@param modeID Id della modalità da eseguire
+]]--
+function modeName(modeID)
+    local name = "None"
+    
+	local modes = {
+		"Single hit",
+		"Kill others",
+		"Kill all",
+		"Kill target",
+		"Kill others but save the target",
+		"Kill all but save the target",
+		"Safe circle",
+		"Unsafe circle",
+		"Kill all inside the radius",
+		"Light cube",
+		"Nothing",
+		"Kill others mode 2",
+		"Loopbring target",
+		"Safe zone"
+	}
+    
+	if modeID >= 0 and modeID < table.getn(modes) then
+		name = modes[modeID + 1]
+	end
+    
+    return name
+end
+
+--[[
+Cambia la modalità attiva
+]]--
+function modeSwitcher()
+    if mode + 1 < 14 then
+        mode = mode + 1
+    else
+        mode = 0
+    end
+    
+    print("Current mode: " .. modeName(mode))
+end
+
+--[[
+Restituisce il nome del giocatore associato alla posizione inserita
+@param pos(Integer) Posizione del giocatore
+@return Restituisce il nome del giocatore associato alla posizione o nil in caso di mancato match
+]]--
+function getPlayerNameFromPos(pos)
+	local playerName = nil
+	
+	for i, v in pairs(game.Players:GetChildren()) do
+		if i == pos then
+			playerName = v.Name
+			break
+		end
+	end
+	
+	return playerName
+end
+
+--[[
+Seleziona il giocatore successivo sulla lista
+]]--
+function playerSelector()
+    if targetPointer + 1 <= table.getn(game.Players:GetChildren()) then
+        targetPointer = targetPointer + 1
+    else
+        targetPointer = 1        
+    end
+    
+	local name = getPlayerNameFromPos(targetPointer)
+	if name == nil or name == player.Name then
+		playerSelector()
+		return
+	else
+		targetName = name
+	end	
+    
+	print("Target: " .. targetName)
+end
+
+--[[
+Esegue lo switch della camera
+]]--
+function switchCamera()
+	local camera = game.Workspace.Camera
+	local newTarget = nil
+	
+	if not view and targetName ~= nil then
+		local targetPlayer = game.Players:FindFirstChild(targetName)
+		if targetPlayer ~= nil and targetPlayer.Character ~= nil then
+			local targetCharacter = targetPlayer.Character
+			newTarget = targetCharacter:FindFirstChild("Humanoid")
+			if newTarget ~= nil then
+				view = true
+				print("Switch ON")
+			end
+		end
+	else
+		local player = game.Players.LocalPlayer
+		local character = player.Character
+		if character ~= nil and character:FindFirstChild("Humanoid") ~= nil then
+			if not esternato then
+				newTarget = character:FindFirstChild("Humanoid")
+			else
+				newTarget = parteAnima	--Gestisce l'esternazione dell'anima
+			end
+			if newTarget ~= nil then
+				view = false
+				print("Switch OFF")
+			end
+		end
+	end
+	
+	camera.CameraSubject = newTarget
+end
+
+--[[
+Cambia lo stato delle collisioni per la sicurezza
+@param status(Boolean) Nuovo status delle componenti
+]]--
+function changeCharacterForSafe(status)
+    function f(element)
+        element.CanCollide = not status
+    end
+    local character = player.Character
+    if character ~= nil then
+        character.HumanoidRootPart.Anchored = status
+        for i, v in pairs(character:GetChildren()) do
+            pcall(f, v)
+        end
+    end
+end
+
+--[[
+Cambia lo stato della modalità di safe
+]]--
+function safeSwitcher()
+    if not safe then
+        safe = true
+        
+        changeCharacterForSafe(true)
+        print("Safe mode ON")
+    else
+        safe = false
+        
+        changeCharacterForSafe(false)
+        print("Safe mode OFF")
+    end
+end
+
+--[[
+Incrementa o decrementa il raggio del target
+@param incDec(Boolean) Flag che se true incrementa il raggio, se false decrementa il raggio
+]]--
+function incDecRadius(incDec)
+    if incDec then
+        radius = radius + radiusInc
+    else
+        if radius - radiusInc >= 0 then
+            radius = radius - radiusInc
+        else
+            radius = 0
+        end
+    end
+    
+    print("Radius: " .. radius)
+end
+
+--[[
+Restituisce la distanza tra il giocatore target e la posizione passata
+@param posizione(Vector3) Posizione di test
+]]--
+function getDistance(posizione)
+    local esito = -1
+    
+    local targetPlayer = game.Players:FindFirstChild(targetName)
+    if targetPlayer ~= nil and targetPlayer.Character ~= nil then
+        local pos = targetPlayer.Character.UpperTorso.Position
+        
+        local xx = posizione.X - pos.X
+        xx = xx * xx
+        
+        local yy = posizione.Y - pos.Y
+        yy = yy * yy
+        
+        local zz = posizione.Z - pos.Z
+        zz = zz * zz
+        
+        esito = math.sqrt(xx + yy + zz)
+    end
+    
+    return esito
+end
+
+--[[
+Restituisce la distanza tra il pezzo dell'anima e la posizione passata
+@param posizione(Vector3) Posizione di test
+]]--
+function getDistanceEsternato(posizione)
+    local esito = -1
+    
+    if parteAnima ~= nil then
+        local pos = parteAnima.Position
+        
+        local xx = posizione.X - pos.X
+        xx = xx * xx
+        
+        local yy = posizione.Y - pos.Y
+        yy = yy * yy
+        
+        local zz = posizione.Z - pos.Z
+        zz = zz * zz
+        
+        esito = math.sqrt(xx + yy + zz)
+    end
+    
+    return esito
+end
+
+--[[
+Restituisce una tabella di giocatori vicini al target
+@return(table) Restituisce una tabella di giocatori vicini entro un raggio
+--]]
+function getNearPlayer()
+	local esito = {}
+
+	for i, v in pairs(game.Players:GetChildren()) do
+		if v.Name ~= player.Name and v.Name ~= targetName then
+			local vCharacter = v.Character
+			if vCharacter ~= nil then
+				local pos = vCharacter.UpperTorso.Position
+				local dist = getDistance(pos)
+				
+				if dist ~= -1 and dist < radius then
+					table.insert(esito, v.Name)
+				end
+			end
+		end
+	end
+	
+	return esito
+end
+
+--[[
+Restituisce una tabella di giocatori vicini alla parteAnima
+@return(table) Restituisce una tabella di giocatori vicini entro un raggio
+--]]
+function getNearPlayerEsternato()
+	local esito = {}
+
+	for i, v in pairs(game.Players:GetChildren()) do
+		if v.Name ~= player.Name then
+			local vCharacter = v.Character
+			if vCharacter ~= nil then
+				local pos = vCharacter.UpperTorso.Position
+				local dist = getDistanceEsternato(pos)
+				
+				if dist ~= -1 and dist < radius then
+					table.insert(esito, v.Name)
+				end
+			end
+		end
+	end
+	
+	return esito
+end
+
+--[[
+Restituisce una tabella di giocatori lontani al target
+@return(table) Restituisce una tabella di giocatori lontani entro un raggio
+--]]
+function getFarPlayer()
+	local esito = {}
+
+	for i, v in pairs(game.Players:GetChildren()) do
+		if v.Name ~= player.Name and v.Name ~= targetName then
+			local vCharacter = v.Character
+			if vCharacter ~= nil then
+				local pos = vCharacter.UpperTorso.Position
+				local dist = getDistance(pos)
+				
+				if dist ~= -1 and dist >= radius then
+					table.insert(esito, v.Name)
+				end
+			end
+		end
+	end
+	
+	return esito
+end
+
+--[[
+Distrugge i guanti della armatura
+]]--
+function distruggiArmatura()
+    if targetName ~= nil then
+        destroyArmor(targetName)
+    end
+end
+
+--[[
+Disegna l'esternazione dell' anima
+]]--
+function disegnaEsternazione()
+	if esternato and parteAnima ~= nil then
+		local cFrame = parteAnima.CFrame
+		
+		local ph = (cFrame * CFrame.new(0, 20, 0)).Position
+		local pb = (cFrame * CFrame.new(0, -10, 0)).Position
+		
+		shot(
+			ph, 
+			pb, 
+			2000, 
+			nil
+		)
+		
+		local pbs = (cFrame * CFrame.new(0, 20, 0) * CFrame.new(10, -10, 0)).Position
+		local pbs2 = (cFrame * CFrame.new(0, 20, 0) * CFrame.new(10, -10, 0) * CFrame.new(0, -3, -10)).Position
+		
+		shot(
+			ph, 
+			pbs, 
+			2000, 
+			nil
+		)
+		
+		shot(
+			pbs, 
+			pbs2, 
+			2000, 
+			nil
+		)
+		
+		local pbd = (cFrame * CFrame.new(0, 20, 0) * CFrame.new(-10, -10, 0)).Position
+		local pbd2 = (cFrame * CFrame.new(0, 20, 0) * CFrame.new(-10, -10, 0) * CFrame.new(0, -3, -10)).Position
+		
+		shot(
+			ph, 
+			pbd, 
+			2000, 
+			nil
+		)
+		
+		shot(
+			pbd, 
+			pbd2, 
+			2000, 
+			nil
+		)
+		
+		posizioneManoDestra = pbs2
+		posizioneManoSinistra = pbd2
+		
+		local h1 = (cFrame * CFrame.new(0, 20, 0) * CFrame.new(0, 4, 0)).Position
+		local ho1 = (cFrame * CFrame.new(0, 20, 0) * CFrame.new(-2, 2, 0)).Position
+		local ho2 = (cFrame * CFrame.new(0, 20, 0) * CFrame.new(2, 2, 0)).Position
+		
+		shot(
+			ph, 
+			h1, 
+			2000, 
+			nil
+		)
+		
+		shot(
+			ho1, 
+			ho2, 
+			2000, 
+			nil
+		)
+	end
+end
+
+--[[
+Funzione di esternazione dell'anima
+]]--
+function funzioneEsternazione()
+	local player = game.Players.LocalPlayer
+	while(player.Character == nil) do
+		wait()
+	end
+	
+	local character = player.Character
+	local camera = game.Workspace.Camera
+		
+	local character = player.Character
+	if not esternato then
+		if parteAnima == nil then
+			parteAnima = Instance.new("Part", game.Workspace)
+			parteAnima.Anchored = true
+			parteAnima.Name = "soul"
+		end
+		parteAnima.Position = Vector3.new(0, 1000, 0)
+		character.HumanoidRootPart.Anchored = true
+		character.HumanoidRootPart.CFrame = CFrame.new(0, 900, 0)
+		camera.CameraSubject = parteAnima
+		esternato = true
+	else
+		character.HumanoidRootPart.Anchored = false
+		parteAnima:Destroy()
+		parteAnima = nil
+		camera.CameraSubject = character.Humanoid
+		esternato = false
+	end
+end
+
+--Funzioni di tastiera
+servizioTastiera.InputBegan:Connect(function(input, gameProcessed)
+	if esternato then
+		if input.KeyCode == Enum.KeyCode.W then
+			comandi["avanti"] = true
+		end
+		if input.KeyCode == Enum.KeyCode.S then
+			comandi["indietro"] = true
+		end
+		if input.KeyCode == Enum.KeyCode.A then
+			comandi["sinistra"] = true
+		end
+		if input.KeyCode == Enum.KeyCode.D then
+			comandi["destra"] = true
+		end
+		if input.KeyCode == Enum.KeyCode.Q then
+			comandi["su"] = true
+		end
+		if input.KeyCode == Enum.KeyCode.E then
+			comandi["giu"] = true
+		end
+	end
+end)
+
+servizioTastiera.InputEnded:Connect(function(input, gameProcessed)
+    if not gameProcessed then
+		if input.KeyCode == Enum.KeyCode.L then
+            modeSwitcher()
+        end
+	
+        if input.KeyCode == Enum.KeyCode.P then
+			attivaKill()
+			if mode == 0 then
+				--Se la modalità è zero fa un'attacco rapido
+				mode = 1
+				wait(0.1)
+				attivaKill()
+				mode = 0
+			end
+		end
+        
+		if input.KeyCode == Enum.KeyCode.K then
+            playerSelector()
+        end
+        
+        if input.KeyCode == Enum.KeyCode.J then
+            switchCamera()
+        end
+        
+        if input.KeyCode == Enum.KeyCode.B then
+            safeSwitcher()
+        end
+        
+        if input.KeyCode == Enum.KeyCode.C then
+            incDecRadius(false)
+        end
+        
+        if input.KeyCode == Enum.KeyCode.V then
+            incDecRadius(true)
+        end
+        
+        if input.KeyCode == Enum.KeyCode.Z then
+            distruggiArmatura()
+        end
+        
+        if input.KeyCode == Enum.KeyCode.G then
+			if not esternato then
+				for i, v in pairs(getNearPlayer()) do
+					killSuspectMode(v)
+				end
+			else
+				for i, v in pairs(getNearPlayerEsternato()) do
+					if v ~= nil then
+						local vPlayer = game.Players:FindFirstChild(v)
+						if vPlayer ~= nil and vPlayer.Character ~= nil then
+							vCharacter = vPlayer.Character
+							local upperTorso = vCharacter:FindFirstChild("UpperTorso")
+							if upperTorso ~= nil and posizioneManoDestra ~= nil and posizioneManoSinistra ~= nil then
+								local pos = upperTorso.Position
+								
+								shot(
+									posizioneManoDestra,
+									pos,
+									2000, 
+									v
+								)
+								
+								shot(
+									posizioneManoSinistra,
+									pos,
+									2000, 
+									v
+								)
+							end
+						end
+					end
+				end
+			end
+        end
+		
+		if input.KeyCode == Enum.KeyCode.T then
+			giveGodFunction(game.Players.LocalPlayer.Name)
+		end
+		
+		if input.KeyCode == Enum.KeyCode.U then
+			punch(
+				targetName,
+				900000000
+			)
+		end
+		
+		if input.KeyCode == Enum.KeyCode.Y then
+			funzioneEsternazione()
+		end
+		
+		if esternato then
+			if input.KeyCode == Enum.KeyCode.W then
+				comandi["avanti"] = false
+			end
+			if input.KeyCode == Enum.KeyCode.S then
+				comandi["indietro"] = false
+			end
+			if input.KeyCode == Enum.KeyCode.A then
+				comandi["sinistra"] = false
+			end
+			if input.KeyCode == Enum.KeyCode.D then
+				comandi["destra"] = false
+			end
+			if input.KeyCode == Enum.KeyCode.Q then
+				comandi["su"] = false
+			end
+			if input.KeyCode == Enum.KeyCode.E then
+				comandi["giu"] = false
+			end
+		end
+		
+		--Da migliorare
+		
+		if input.KeyCode == Enum.KeyCode.H then
+			targetName = game.Players.LocalPlayer.Name
+			print("Target: " .. targetName)
+		end
+		
+		if input.KeyCode == Enum.KeyCode.X then
+			if bodyPartsPointer + 1  <= table.getn(bodyParts) then
+				bodyPartsPointer = bodyPartsPointer + 1
+			else
+				bodyPartsPointer = 1
+			end
+			
+			print("Body target: " .. bodyParts[bodyPartsPointer])
+		end
+    end
+end)
+
+--Thread di uccisione
+coroutine.resume(coroutine.create(function()
+	print("Attivazione del ciclo di uccisione")
+	
+	local function cicloFunzione()
+		if mode ~= 0 and status then
+			
+			--Uccidi gli altri
+			if mode == 1 then
+				for i, v in pairs(game.Players:GetChildren()) do
+					if v.Name ~= game.Players.LocalPlayer.Name then
+						kill(v.Name)
+					end
+				end
+			end
+			
+			--Uccidi tutti
+			if mode == 2 then
+				for i, v in pairs(game.Players:GetChildren()) do
+					kill(v.Name)
+				end
+			end
+			
+			--Uccide solo il target
+			if mode == 3 and targetName ~= nil then
+				kill(targetName)
+			end
+			
+			--Uccidi gli altri ma salva il target
+			if mode == 4 and targetName ~= nil then
+				for i, v in pairs(game.Players:GetChildren()) do
+					if v.Name ~= game.Players.LocalPlayer.Name and v.Name ~= targetName then
+						kill(v.Name)
+					end
+				end
+			end
+			
+			--Uccidi tutti ma salva il target
+			if mode == 5 and targetName ~= nil then
+				for i, v in pairs(game.Players:GetChildren()) do
+					if v.Name ~= targetName then
+						kill(v.Name)
+					end
+				end
+			end
+			
+			--Uccisioni vicino al giocatore sia per la mode 6 che per la 8, nulla vieta aggiunte future
+			if (mode == 6 or mode == 8) and targetName ~= nil then
+				if radius ~= 0 then
+					for i, v in pairs(getNearPlayer()) do
+						kill(v)
+					end
+				elseif radius == 0 and mode ~= 8 then
+					kill(targetName)
+				end
+			end
+			
+			--Uccide il giocatore se entra all'interno del raggio d'azione del localPlayer
+			if mode == 7 and targetName ~= nil then
+				for i, v in pairs(getNearPlayer()) do
+					if v.Name == game.Players.LocalPlayer.Name then
+						kill(targetName)
+						break
+					end
+				end
+			end
+			
+			--Crash del server
+			if mode == 10 then
+				local i = 0
+				while i < 100 do
+					callLagEvent()
+					i = i + 1
+				end
+			end
+			
+			--Uccide gli altri con un pugno
+			if mode == 11 then
+				for i, v in pairs(game.Players:GetChildren()) do
+					if v.Name ~= game.Players.LocalPlayer.Name then
+						punch(
+							v.Name,
+							90000000000000000000
+						)
+					end
+				end
+			end
+			
+			--Loopbringa il target
+			if mode == 12 and targetName ~= nil then
+				punch(
+					targetName,
+					90000000000000000000
+				)
+			end
+			
+			--Cubo della super sicurezza dai pugni
+			if mode == 13 and targetName ~= nil then
+				for i, v in pairs(getFarPlayer()) do
+					if v ~= game.Players.LocalPlayer.Name then
+						kill(v)
+					end
+				end
+			end
+		end
+	end
+	
+	while true do
+		pcall(cicloFunzione)
+		wait()
+	end
+end))
+
+--Thread per gli effetti
+coroutine.resume(coroutine.create(function()
+	print("Attivazione thread degli effetti")
+	while true do
+		if status then
+			if mode == 6 or mode == 7 then
+				rayCircle(10)
+			end
+			
+			if mode == 9 or mode == 13 then
+				rayCube()
+			end
+		end
+		
+		wait()
+	end
+end))
+
+--Thread per la safe
+coroutine.resume(coroutine.create(function()
+	print("Attivazione del thread di safe")
+	while true do
+		if safe then
+			safeFunction()
+		end
+	
+		wait()
+	end
+end))
+
+--Thread per il disegno dell'esternazione
+coroutine.resume(coroutine.create(function()
+	print("Attivazione del thread di disegno dell'esternazione")
+	
+	while true do
+		if esternato then
+			disegnaEsternazione()
+		end
+		
+		wait()
+	end
+	
+end))
+
+--Thread per il movimento dell'anima
+coroutine.resume(coroutine.create(function()
+	print("Attivazione del thread di movimento dell'esternazione")
+	
+	while true do
+		if esternato then
+			local character = game.Players.LocalPlayer.Character
+			if character ~= nil and character:FindFirstChild("HumanoidRootPart") ~= nil then
+				local rootPart = character:FindFirstChild("HumanoidRootPart")
+				if not rootPart.Anchored then
+					rootPart.Anchored = true
+				end
+			end
+			
+			--Movimento
+			local camera = game.Workspace.Camera
+			if camera ~= nil then
+				local lookVector = camera.CFrame.LookVector.Unit
+				local lookVectorRight = camera.CFrame.RightVector.Unit
+				local lookVectorUp = camera.CFrame.UpVector.Unit
+				if parteAnima ~= nil then
+					parteAnima.CFrame = CFrame.new(parteAnima.Position, parteAnima.Position + lookVector)
+					if comandi["avanti"] then
+						parteAnima.Position = parteAnima.Position + (lookVector * velocitaAnima)
+					end
+					
+					if comandi["indietro"] then
+						parteAnima.Position = parteAnima.Position - (lookVector * velocitaAnima)
+					end
+					
+					if comandi["destra"] then
+						parteAnima.Position = parteAnima.Position + (lookVectorRight * velocitaAnima)
+					end
+					
+					if comandi["sinistra"] then
+						parteAnima.Position = parteAnima.Position - (lookVectorRight * velocitaAnima)
+					end
+					
+					if comandi["su"] then
+						parteAnima.Position = parteAnima.Position + (lookVectorUp * velocitaAnima)
+					end
+					
+					if comandi["giu"] then
+						parteAnima.Position = parteAnima.Position - (lookVectorUp * velocitaAnima)
+					end
+				end
+			end
+		end
+		
+		wait()
+	end
+	
+end))
+
+--[[
+Funzione che attiva una serie di eventi per la salvaguardia del giocatore
+]]--
+function funzioneSalvaVita()
+	print("Funzione salvavita chiamata")
+	local player = game.Players.LocalPlayer	
+	while player.Character == nil do
+		wait()
+	end
+	local playerCharacter = player.Character
+	while not playerCharacter:FindFirstChild("HumanoidRootPart") or not playerCharacter:FindFirstChild("Humanoid") do
+		wait()
+	end
+	if playerCharacter ~= nil then
+		local rootPart = playerCharacter:FindFirstChild("HumanoidRootPart")
+		local humanoid = playerCharacter:FindFirstChild("Humanoid")
+		
+		if rootPart ~= nil then
+			rootPart.ChildAdded:Connect(function(child)
+				if child.ClassName == "BodyPosition" then
+					child.MaxForce = Vector3.new(0, 0, 0)
+				end
+				
+				if child.ClassName == "BodyAngularVelocity" then
+					child.MaxTorque = Vector3.new(0, 0, 0)
+				end
+			end)
+		end
+		
+		if humanoid ~= nil then
+			humanoid.Died:Connect(function()
+				funzioneSalvaVita()
+			end)
+			
+			humanoid.HealthChanged:Connect(function(health)
+				if playerCharacter:FindFirstChild("Suit") ~= nil then
+					if health < 900000000000000 then
+						giveGodFunction(player.Name)
+					end
+				end
+			end)
+		end
+	end
+end
+
+funzioneSalvaVita()
+setupMessage("5.4.0");
