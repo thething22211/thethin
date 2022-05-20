@@ -1,0 +1,207 @@
+-- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+
+local scriptHub = Instance.new("ScreenGui")
+local main = Instance.new("Frame")
+local Nothing1 = Instance.new("TextButton")
+local beamScript = Instance.new("TextButton")
+local suitmod = Instance.new("TextButton")
+local Discord = Instance.new("TextButton")
+local IronBlue = Instance.new("TextButton")
+local Ironcheats = Instance.new("TextButton")
+local Cmds = Instance.new("TextButton")
+local Nothing2 = Instance.new("TextButton")
+local Cred = Instance.new("TextButton")
+local Label = Instance.new("TextLabel")
+local UIGradient = Instance.new("UIGradient")
+local Toggle = Instance.new("TextButton")
+local UIGradient_2 = Instance.new("UIGradient")
+
+--Properties:
+
+scriptHub.Name = "scriptHub"
+scriptHub.Parent = game.CoreGui
+
+main.Name = "main"
+main.Parent = scriptHub
+main.Active = true
+main.BackgroundColor3 = Color3.fromRGB(117, 117, 117)
+main.Position = UDim2.new(-0.000676989555, 0, -0.00190529227, 0)
+main.Selectable = true
+main.Size = UDim2.new(0, 289, 0, 215)
+main.Draggable = true
+
+
+Nothing1.Name = "Nothing1"
+Nothing1.Parent = main
+Nothing1.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Nothing1.Position = UDim2.new(0, 0, 0.23525238, 0)
+Nothing1.Size = UDim2.new(0, 93, 0, 50)
+Nothing1.Font = Enum.Font.SourceSans
+Nothing1.Text = "Nothing"
+Nothing1.TextColor3 = Color3.fromRGB(12, 255, 0)
+Nothing1.TextSize = 14.000
+Nothing1.MouseButton1Down:connect (function()
+    print('nothing')
+end)
+
+beamScript.Name = "beamScript"
+beamScript.Parent = main
+beamScript.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+beamScript.Position = UDim2.new(0.339100361, 0, 0.500368655, 0)
+beamScript.Size = UDim2.new(0, 93, 0, 50)
+beamScript.Font = Enum.Font.SourceSans
+beamScript.Text = "Beam Scripts"
+beamScript.TextColor3 = Color3.fromRGB(12, 255, 0)
+beamScript.TextSize = 14.000
+beamScript.MouseButton1Down:connect (function()
+    game:GetService("Players").LocalPlayer:Kick('DM me for the script thething45#0175')
+end)
+
+
+
+suitmod.Name = "suit mod"
+suitmod.Parent = main
+suitmod.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+suitmod.Position = UDim2.new(0.677999973, 0, 0.234999999, 0)
+suitmod.Size = UDim2.new(0, 93, 0, 50)
+suitmod.Font = Enum.Font.SourceSans
+suitmod.Text = "Suit Mods"
+suitmod.TextColor3 = Color3.fromRGB(12, 255, 0)
+suitmod.TextSize = 14.000
+suitmod.MouseButton1Down:connect (function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/thething22211/thethin/main/tjatjajt"))()
+end)
+
+Discord.Name = "Discord"
+Discord.Parent = main
+Discord.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Discord.Position = UDim2.new(0.339100361, 0, 0.764841795, 0)
+Discord.Size = UDim2.new(0, 93, 0, 50)
+Discord.Font = Enum.Font.SourceSans
+Discord.Text = "Discord Invite"
+Discord.TextColor3 = Color3.fromRGB(12, 255, 0)
+Discord.TextSize = 14.000
+Discord.MouseButton1Down:connect (function()
+setclipboard('https://discord.gg/BMZEuTYT4j')
+end)
+
+
+IronBlue.Name = "IronBlue"
+IronBlue.Parent = main
+IronBlue.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+IronBlue.Position = UDim2.new(0, 0, 0.500368655, 0)
+IronBlue.Size = UDim2.new(0, 93, 0, 50)
+IronBlue.Font = Enum.Font.SourceSans
+IronBlue.Text = "Iron Blue"
+IronBlue.TextColor3 = Color3.fromRGB(12, 255, 0)
+IronBlue.TextSize = 14.000
+IronBlue.MouseButton1Down:connect (function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/thething22211/thethin/main/thethin"))()
+end)
+
+Ironcheats.Name = "Iron cheats"
+Ironcheats.Parent = main
+Ironcheats.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Ironcheats.Position = UDim2.new(0.339100361, 0, 0.23525238, 0)
+Ironcheats.Size = UDim2.new(0, 93, 0, 50)
+Ironcheats.Font = Enum.Font.SourceSans
+Ironcheats.Text = "Iron Cheats"
+Ironcheats.TextColor3 = Color3.fromRGB(12, 255, 0)
+Ironcheats.TextSize = 14.000
+Ironcheats.MouseButton1Down:connect (function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/thething22211/thethin/main/thebigthing"))()
+end)
+
+
+Cmds.Name = "Cmds"
+Cmds.Parent = main
+Cmds.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Cmds.Position = UDim2.new(0, 0, 0.764841735, 0)
+Cmds.Size = UDim2.new(0, 93, 0, 50)
+Cmds.Font = Enum.Font.SourceSans
+Cmds.Text = "Cmds Beam Script"
+Cmds.TextColor3 = Color3.fromRGB(12, 255, 0)
+Cmds.TextSize = 14.000
+Cmds.MouseButton1Down:connect (function()
+	print("Beam Script Command list")
+	print("P -> Kill mode")
+	print("L -> Change mode")
+	print("K -> Change target")
+	print("J -> Switch camera")
+	print("X -> Change body target")
+	print("C -> Decrease radius")
+	print("V -> Increase radius")
+	print("B -> Safe mode")
+	print("H -> Set target as local player")
+	print("G -> Kill in suspect mode from target")
+	print("Z -> Destroy target arms")
+	print("T -> GOD function")
+	print("U -> Hit target")
+	print("Y -> Become God")
+end)
+
+
+Nothing2.Name = "Nothing2"
+Nothing2.Parent = main
+Nothing2.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Nothing2.Position = UDim2.new(0.678200722, 0, 0.500368655, 0)
+Nothing2.Size = UDim2.new(0, 93, 0, 50)
+Nothing2.Font = Enum.Font.SourceSans
+Nothing2.Text = "Nothing"
+Nothing2.TextColor3 = Color3.fromRGB(12, 255, 0)
+Nothing2.TextSize = 14.000
+Nothing2.MouseButton1Down:connect (function()
+    print('Nothing')
+end)
+
+Cred.Name = "Cred"
+Cred.Parent = main
+Cred.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Cred.Position = UDim2.new(0.678200722, 0, 0.764841735, 0)
+Cred.Size = UDim2.new(0, 93, 0, 50)
+Cred.Font = Enum.Font.SourceSans
+Cred.Text = "Credets F9 To See"
+Cred.TextColor3 = Color3.fromRGB(12, 255, 0)
+Cred.TextSize = 14.000
+Cred.MouseButton1Down:connect (function()
+    print('Owner Terry')
+    print('Hockey For Suit Mods : Strong Blast and Chrome Suit')
+    print('Capp script dont know there names')
+    print('Beam Scrip By GrandeNebbia')
+    print('Beam script dont know name')
+    print('iron cheats dont know name')
+    print('Iron Blue ON GUI')
+end)
+
+Label.Name = "Label"
+Label.Parent = main
+Label.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+Label.BorderColor3 = Color3.fromRGB(3, 0, 52)
+Label.Size = UDim2.new(0, 245, 0, 44)
+Label.Font = Enum.Font.SourceSans
+Label.Text = "Iron Man SIm Script By Terry"
+Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+Label.TextSize = 24.000
+
+UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 4)), ColorSequenceKeypoint.new(0.12, Color3.fromRGB(255, 11, 158)), ColorSequenceKeypoint.new(0.31, Color3.fromRGB(145, 20, 255)), ColorSequenceKeypoint.new(0.44, Color3.fromRGB(57, 110, 255)), ColorSequenceKeypoint.new(0.58, Color3.fromRGB(16, 255, 148)), ColorSequenceKeypoint.new(0.73, Color3.fromRGB(202, 255, 26)), ColorSequenceKeypoint.new(0.87, Color3.fromRGB(255, 176, 16)), ColorSequenceKeypoint.new(0.93, Color3.fromRGB(255, 128, 24)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 24, 24))}
+UIGradient.Parent = Label
+
+Toggle.Name = "Toggle"
+Toggle.Parent = main
+Toggle.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Toggle.Position = UDim2.new(0.846982002, 0, 0, 0)
+Toggle.Size = UDim2.new(0, 44, 0, 44)
+Toggle.Font = Enum.Font.SourceSans
+Toggle.Text = "Toggle"
+Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+Toggle.TextSize = 15.000
+
+UIGradient_2.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(185, 255, 110)), ColorSequenceKeypoint.new(0.28, Color3.fromRGB(92, 212, 255)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(152, 7, 255)), ColorSequenceKeypoint.new(0.74, Color3.fromRGB(214, 255, 29)), ColorSequenceKeypoint.new(0.99, Color3.fromRGB(30, 188, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
+UIGradient_2.Parent = main
+
+
+
