@@ -1199,5 +1199,14 @@ function funzioneSalvaVita()
 	end
 end
 
+--[[
+Messaggio di setup dell'applicazione
+@param version(String) Versione del software
+--]]
+function setupMessage(version)
+	print("-" .. version)
+
+end
+
 funzioneSalvaVita()
 setupMessage("5.4.0");
