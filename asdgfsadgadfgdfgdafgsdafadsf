@@ -1204,8 +1204,22 @@ Messaggio di setup dell'applicazione
 @param version(String) Versione del software
 --]]
 function setupMessage(version)
-	print("-" .. version)
-
+	print("Ironman simulator Scrip By GrandeNebbia v" .. version)
+	print("Commands list")
+	print("P -> Kill mode")
+	print("L -> Change mode")
+	print("K -> Change target")
+	print("J -> Switch camera")
+	print("X -> Change body target")
+	print("C -> Decrease radius")
+	print("V -> Increase radius")
+	print("B -> Safe mode")
+	print("H -> Set target as local player")
+	print("G -> Kill in suspect mode from target")
+	print("Z -> Destroy target arms")
+	print("T -> GOD function")
+	print("U -> Hit target")
+	print("Y -> Become God")
 end
 
 funzioneSalvaVita()
