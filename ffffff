@@ -1,0 +1,74 @@
+-- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+
+local key = Instance.new("ScreenGui")
+local KEY = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local ENTER = Instance.new("TextBox")
+local GET = Instance.new("TextButton")
+local VIRFIY = Instance.new("TextButton")
+
+--Properties:
+
+key.Name = "key"
+key.Parent = game.CoreGui
+
+KEY.Name = "KEY"
+KEY.Parent = key
+KEY.BackgroundColor3 = Color3.fromRGB(25, 24, 24)
+KEY.Position = UDim2.new(0.440035105, 0, 0.332007974, 0)
+KEY.Size = UDim2.new(0, 162, 0, 168)
+
+TextLabel.Parent = KEY
+TextLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.Size = UDim2.new(0, 162, 0, 42)
+TextLabel.Font = Enum.Font.SourceSans
+TextLabel.Text = "GET THE KEY"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 14.000
+
+ENTER.Name = "ENTER"
+ENTER.Parent = KEY
+ENTER.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ENTER.ClipsDescendants = true
+ENTER.Position = UDim2.new(0, 0, 0.326920569, 0)
+ENTER.Size = UDim2.new(0, 162, 0, 35)
+ENTER.Font = Enum.Font.SourceSans
+ENTER.MultiLine = true
+ENTER.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
+ENTER.PlaceholderText = "KEY HEAR"
+ENTER.Text = ""
+ENTER.TextColor3 = Color3.fromRGB(255, 255, 255)
+ENTER.TextSize = 14.000
+ENTER.TextWrapped = true
+
+GET.Name = "GET"
+GET.Parent = KEY
+GET.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+GET.Position = UDim2.new(0, 0, 0.601567328, 0)
+GET.Size = UDim2.new(0, 162, 0, 33)
+GET.Font = Enum.Font.SourceSans
+GET.Text = "GET KEY"
+GET.TextColor3 = Color3.fromRGB(255, 255, 255)
+GET.TextSize = 14.000
+
+VIRFIY.Name = "VIRFIY"
+VIRFIY.Parent = KEY
+VIRFIY.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+VIRFIY.Position = UDim2.new(0, 0, 0.801952362, 0)
+VIRFIY.Size = UDim2.new(0, 162, 0, 33)
+VIRFIY.Font = Enum.Font.SourceSans
+VIRFIY.Text = "SEMMET KEY"
+VIRFIY.TextColor3 = Color3.fromRGB(255, 255, 255)
+VIRFIY.TextSize = 14.000
+VIRFIY.MouseButton1Click:Connect(function()
+	if ENTER.Text == "THETHING" then
+		KEY.Visible = false 
+		wait(0.5)
+	print('dumb')
+	wait(1)
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/thething22211/thethin/main/ass%20key'))()
+	end
+end)
