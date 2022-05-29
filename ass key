@@ -1,0 +1,227 @@
+-- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+
+local Alfa0154 = Instance.new("ScreenGui")
+local Top = Instance.new("Frame")
+local Main = Instance.new("Frame")
+local CAPP = Instance.new("TextButton")
+local IronCheats = Instance.new("TextButton")
+local SuitMod = Instance.new("TextButton")
+local IronBlu = Instance.new("TextButton")
+local Beam = Instance.new("TextButton")
+local Nothing = Instance.new("TextButton")
+local CmdsBeam = Instance.new("TextButton")
+local DiscordInvite = Instance.new("TextButton")
+local Credets = Instance.new("TextButton")
+local TextLabel = Instance.new("TextLabel")
+local TOGGLE = Instance.new("TextButton")
+local Lable = Instance.new("Frame")
+local TextLabel_2 = Instance.new("TextLabel")
+local UIGradient = Instance.new("UIGradient")
+
+--Properties:
+
+Alfa0154.Name = "Alfa 0.154"
+Alfa0154.Parent = game.CoreGui
+
+Top.Name = "Top"
+Top.Parent = Alfa0154
+Top.Active = true
+Top.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Top.BackgroundTransparency = 1.000
+Top.Size = UDim2.new(0, 259, 0, 29)
+Top.Draggable = true
+
+Main.Name = "Main"
+Main.Parent = Top
+Main.Active = true
+Main.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+Main.Position = UDim2.new(0, 0, 1, 0)
+Main.Size = UDim2.new(0, 259, 0, 111)
+
+
+CAPP.Name = "CAPP"
+CAPP.Parent = Main
+CAPP.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CAPP.Size = UDim2.new(0, 79, 0, 30)
+CAPP.Font = Enum.Font.SourceSans
+CAPP.Text = "Capp Script"
+CAPP.TextColor3 = Color3.fromRGB(38, 255, 0)
+CAPP.TextSize = 14.000
+CAPP.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/boop71/cappuccino-new/main/loader.lua'))()
+end)
+
+
+IronCheats.Name = "IronCheats"
+IronCheats.Parent = Main
+IronCheats.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+IronCheats.Position = UDim2.new(0.34749034, 0, 0, 0)
+IronCheats.Size = UDim2.new(0, 79, 0, 30)
+IronCheats.Font = Enum.Font.SourceSans
+IronCheats.Text = "Iron Cheats"
+IronCheats.TextColor3 = Color3.fromRGB(38, 255, 0)
+IronCheats.TextSize = 14.000
+IronCheats.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/thething22211/thethin/main/thebigthing"))()
+end)
+
+SuitMod.Name = "SuitMod"
+SuitMod.Parent = Main
+SuitMod.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+SuitMod.Position = UDim2.new(0.694980681, 0, 0, 0)
+SuitMod.Size = UDim2.new(0, 79, 0, 30)
+SuitMod.Font = Enum.Font.SourceSans
+SuitMod.Text = "Suit Mod"
+SuitMod.TextColor3 = Color3.fromRGB(38, 255, 0)
+SuitMod.TextSize = 14.000
+SuitMod.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/thething22211/thethin/main/tjatjajt"))()
+end)
+
+IronBlu.Name = "IronBlu"
+IronBlu.Parent = Main
+IronBlu.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+IronBlu.Position = UDim2.new(0, 0, 0.360360354, 0)
+IronBlu.Size = UDim2.new(0, 79, 0, 30)
+IronBlu.Font = Enum.Font.SourceSans
+IronBlu.Text = "Iron Blu"
+IronBlu.TextColor3 = Color3.fromRGB(38, 255, 0)
+IronBlu.TextSize = 14.000
+IronBlu.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/thething22211/thethin/main/thethin"))()
+end)
+
+Beam.Name = "Beam"
+Beam.Parent = Main
+Beam.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Beam.Position = UDim2.new(0.34749034, 0, 0.360360354, 0)
+Beam.Size = UDim2.new(0, 79, 0, 30)
+Beam.Font = Enum.Font.SourceSans
+Beam.Text = "Beam Script"
+Beam.TextColor3 = Color3.fromRGB(38, 255, 0)
+Beam.TextSize = 14.000
+Beam.MouseButton1Click:Connect(function()
+    game:GetService("Players").LocalPlayer:Kick('DM me for the script thething45#0175')
+end)
+
+Nothing.Name = "Nothing"
+Nothing.Parent = Main
+Nothing.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Nothing.Position = UDim2.new(0.694980681, 0, 0.360360354, 0)
+Nothing.Size = UDim2.new(0, 79, 0, 30)
+Nothing.Font = Enum.Font.SourceSans
+Nothing.Text = "Nothing"
+Nothing.TextColor3 = Color3.fromRGB(38, 255, 0)
+Nothing.TextSize = 14.000
+Nothing.MouseButton1Click:Connect(function()
+   print("Nothing")
+end)
+
+CmdsBeam.Name = "CmdsBeam"
+CmdsBeam.Parent = Main
+CmdsBeam.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CmdsBeam.Position = UDim2.new(0, 0, 0.729729712, 0)
+CmdsBeam.Size = UDim2.new(0, 79, 0, 30)
+CmdsBeam.Font = Enum.Font.SourceSans
+CmdsBeam.Text = "Cmds for Beam"
+CmdsBeam.TextColor3 = Color3.fromRGB(38, 255, 0)
+CmdsBeam.TextSize = 14.000
+CmdsBeam.MouseButton1Click:Connect(function()
+	print("Beam Script Command list")
+	print("P -> Kill mode")
+	print("L -> Change mode")
+	print("K -> Change target")
+	print("J -> Switch camera")
+	print("X -> Change body target")
+	print("C -> Decrease radius")
+	print("V -> Increase radius")
+	print("B -> Safe mode")
+	print("H -> Set target as local player")
+	print("G -> Kill in suspect mode from target")
+	print("Z -> Destroy target arms")
+	print("T -> GOD function")
+	print("U -> Hit target")
+	print("Y -> Become God")
+end)
+
+DiscordInvite.Name = "DiscordInvite"
+DiscordInvite.Parent = Main
+DiscordInvite.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+DiscordInvite.Position = UDim2.new(0.34749034, 0, 0.729729712, 0)
+DiscordInvite.Size = UDim2.new(0, 79, 0, 30)
+DiscordInvite.Font = Enum.Font.SourceSans
+DiscordInvite.Text = "Discord Invite"
+DiscordInvite.TextColor3 = Color3.fromRGB(38, 255, 0)
+DiscordInvite.TextSize = 14.000
+DiscordInvite.MouseButton1Click:Connect(function()
+    setclipboard('https://discord.gg/BMZEuTYT4j')
+end)
+
+Credets.Name = "Credets"
+Credets.Parent = Main
+Credets.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Credets.Position = UDim2.new(0.694980681, 0, 0.729729712, 0)
+Credets.Size = UDim2.new(0, 79, 0, 30)
+Credets.Font = Enum.Font.SourceSans
+Credets.Text = "Credets"
+Credets.TextColor3 = Color3.fromRGB(38, 255, 0)
+Credets.TextSize = 14.000
+Credets.MouseButton1Click:Connect(function()
+    print('Owner Terry')
+    print('Hockey For Suit Mods : Strong Blast and Chrome Suit')
+    print('Capp script dont know there names')
+    print('Beam Scrip By GrandeNebbia')
+    print('iron cheats dont know name')
+    print('Iron Blue ON GUI')
+end)
+
+TextLabel.Parent = Top
+TextLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.Size = UDim2.new(0, 227, 0, 28)
+TextLabel.Font = Enum.Font.SourceSans
+TextLabel.Text = "IRON MAN SIM SCRIPT HUB"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 20.000
+
+TOGGLE.Name = "TOGGLE"
+TOGGLE.Parent = Top
+TOGGLE.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+TOGGLE.Position = UDim2.new(0.876447856, 0, 0, 0)
+TOGGLE.Size = UDim2.new(0, 32, 0, 28)
+TOGGLE.Font = Enum.Font.SourceSans
+TOGGLE.Text = "+/-"
+TOGGLE.TextColor3 = Color3.fromRGB(255, 255, 255)
+TOGGLE.TextSize = 22.000
+TOGGLE.TextWrapped = true
+TOGGLE.MouseButton1Click:Connect(function()
+	if(Main.Visible == true) then
+		Main.Visible = false
+	else
+		Main.Visible = true
+	end
+end)
+
+Lable.Name = "Lable"
+Lable.Parent = Alfa0154
+Lable.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Lable.BackgroundTransparency = 1.000
+Lable.Position = UDim2.new(-0.00196307059, 0, 0.836978137, 0)
+Lable.Size = UDim2.new(0, 289, 0, 81)
+
+TextLabel_2.Parent = Lable
+TextLabel_2.Active = true
+TextLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_2.BackgroundTransparency = 1.000
+TextLabel_2.Position = UDim2.new(0.00566574605, 0, 0.330657423, 0)
+TextLabel_2.Size = UDim2.new(0, 291, 0, 55)
+TextLabel_2.Font = Enum.Font.AmaticSC
+TextLabel_2.Text = "Made By Terry Severs"
+TextLabel_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_2.TextSize = 56.000
+TextLabel_2.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+
+UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 5, 9)), ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(0.01, Color3.fromRGB(255, 0, 4)), ColorSequenceKeypoint.new(0.08, Color3.fromRGB(255, 5, 180)), ColorSequenceKeypoint.new(0.13, Color3.fromRGB(255, 14, 182)), ColorSequenceKeypoint.new(0.19, Color3.fromRGB(126, 20, 255)), ColorSequenceKeypoint.new(0.25, Color3.fromRGB(38, 10, 255)), ColorSequenceKeypoint.new(0.36, Color3.fromRGB(10, 255, 161)), ColorSequenceKeypoint.new(0.47, Color3.fromRGB(20, 255, 67)), ColorSequenceKeypoint.new(0.64, Color3.fromRGB(223, 255, 12)), ColorSequenceKeypoint.new(0.86, Color3.fromRGB(255, 134, 12)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
+UIGradient.Parent = TextLabel_2
