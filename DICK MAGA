@@ -79,26 +79,9 @@ local dropdown = sec2:Dropdown("call part", {"Mask","Helmet","UpperTorso","Lower
     game.Players.LocalPlayer.Backpack.ironMan.Assets.Events.callPiece:FireServer(t)
   end)
 --suit things
-sec1:Button("Chrom All", function()
-    for i,v in pairs(game.Players.LocalPlayer.Character.Suit:GetDescendants()) do
-        if v.name == "Union" then
-            if v ~= game.Players.LocalPlayer.Character.Suit.Helmet.Union then
-            v:Destroy()
-            end
-        end
-    end
-    game.Players.LocalPlayer.Character.Suit.RightUpperArm.Part:Destroy()
-    game.Players.LocalPlayer.Character.Suit.LeftUpperArm.Part:Destroy()
-  end)
 
 --suit things
-  sec1:Button("Strong Blast",function ()
-    local count = 0
-	while count < 25 do
-	game.Players.LocalPlayer.Backpack.suitControl.Client:clone().Parent = game.Players.LocalPlayer.Backpack.suitControl
-	count = count +1
-	end
-end)
+
 --chrome suit
 
 sec3:Button("Right sholder",function ()
